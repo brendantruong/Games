@@ -161,4 +161,11 @@ public class Snaps extends CardGame {
             app.text("Restart by re-running the program.", app.width / 2f, app.height / 2f + 35);
         }
     }
+    public boolean isGameOver() {
+    return gameOver;
+}
+
+public boolean playerWon() {
+    return endMessage.contains("YOU SNAPPED");
+}
 }

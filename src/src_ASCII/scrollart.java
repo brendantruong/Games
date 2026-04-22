@@ -2,7 +2,6 @@ package src_ASCII;
 import java.util.Random;
 
 public class scrollart {
-    // --------- Nested helper class so no separate file is needed ---------
     static class AsciiArt {
         char[][] img;
         int width;
@@ -31,12 +30,17 @@ public class scrollart {
             return widest;
         }
     }
-    // ---------------------------------------------------------------------
 
     static final int WIDTH = getTerminalWidth() - 1;
     static final Random rand = new Random();
 
+    public static String lastScore = "0";
+
     public static void main(String[] args) throws InterruptedException {
+        playForPortal();
+    }
+
+    public static void playForPortal() throws InterruptedException {
         AsciiArt burger = new AsciiArt(getBurger());
         AsciiArt ice    = new AsciiArt(getIC());
         AsciiArt ghost  = lines(
@@ -61,7 +65,6 @@ public class scrollart {
             "   \\_|_/   "
         );
 
-        // Add initials ONLY to burger & ice
         addInitials(burger);
         addInitials(ice);
 
@@ -76,15 +79,23 @@ public class scrollart {
         char[][] nextRows = new char[canvasH][WIDTH];
         for (int i = 0; i < nextRows.length; i++) nextRows[i] = emptyRow();
 
-        while (true) {
+        int spawnCount = 0;
+        int frames = 300;
+
+        for (int frame = 0; frame < frames; frame++) {
             if (rand.nextDouble() < 0.28) {
                 AsciiArt art = all[rand.nextInt(all.length)];
                 blit(nextRows, art, randomSafeX(art.width));
+                spawnCount++;
             }
             System.out.println(new String(nextRows[0]));
             shiftRowsUp(nextRows);
             Thread.sleep(60);
         }
+
+        lastScore = Integer.toString(spawnCount);
+        System.out.println("\nASCII Art finished!");
+        System.out.println("Score: " + lastScore);
     }
 
     static void addInitials(AsciiArt a) {
@@ -137,7 +148,6 @@ public class scrollart {
         return new AsciiArt(img);
     }
 
-    // --------- Burger (13x13) ----------
     static final int BURGER_HEIGHT = 13;
     static final int BURGER_WIDTH  = 13;
     static char[][] getBurger() {
@@ -175,7 +185,6 @@ public class scrollart {
         return img;
     }
 
-    // --------- Ice Cream (19x12) ----------
     static final int IC_HEIGHT = 19;
     static final int IC_WIDTH  = 12;
     static char[][] getIC() {
@@ -201,7 +210,6 @@ public class scrollart {
         return img;
     }
 
-    // --------- Terminal width helpers ----------
     public static int getTerminalWidth() {
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("nix") || os.contains("nux") || os.contains("mac")) {

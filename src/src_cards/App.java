@@ -2,6 +2,9 @@ package src_cards;
 import processing.core.PApplet;
 
 public class App extends PApplet {
+    public static boolean portalMode = false;
+public static boolean gameFinished = false;
+public static String finalScore = "0";
 
     CardGame cardGame;
 
@@ -73,6 +76,26 @@ public class App extends PApplet {
                 timer = 0;
             }
         }
+        if (cardGame instanceof Snaps) {
+
+    Snaps s = (Snaps) cardGame;
+
+    if (s.isGameOver()) {
+
+        if (portalMode) {
+
+            if (s.playerWon()) {
+                finalScore = "WIN";
+            } else {
+                finalScore = "LOSS";
+            }
+
+            gameFinished = true;
+
+            exit();
+        }
+    }
+}
     }
 
     private void drawMenu() {
